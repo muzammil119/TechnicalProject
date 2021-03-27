@@ -42,6 +42,7 @@
         $( "#edit-email" ).val(email);        
         $( "#edit-employee-id" ).val(id);
         $('#edit_company_id').empty();
+        console.log(companylist)
         var company_status = JSON.parse(companylist);
 
         var select_role = company_id.substr(0,1).toUpperCase()+company_id.substr(1);

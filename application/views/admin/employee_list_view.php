@@ -228,7 +228,7 @@
                                     <label class="error" id="edit-error_company"> field is required.</label>
                                     <select name="edit_company_id" id="edit_company_id" class="form-control" >
                                         <option value="0" selected="selected">-- SELECT COMPANY --</option>
-                                         <option value="1">User</option>
+                                        
                                     </select>                                   
                                 </div>
                              </div>

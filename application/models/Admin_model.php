@@ -196,7 +196,12 @@ class Admin_model extends CI_Model {
         return array('status' => 'success', 'message' => '');
 
     }
-
+    function get_company_list_emp(){
+        $this->db->select('name,id');
+        $this->db->from('company_details');        
+        $query=$this->db->get();
+        return $query->result();
+    }
     function generate_password(){
         $chars = "abcdefghjkmnopqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ023456789!@#$%^&*()_=";
         $password = substr( str_shuffle( $chars ), 0, 10 );

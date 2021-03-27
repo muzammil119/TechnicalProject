@@ -88,7 +88,7 @@ class Admin extends CI_Controller {
             'formTitle' => 'Employee Management',
             'title' => 'Employee Management',
             'employee_list' => $this->admin_model->get_employee_datatable(),
-            'company_list' => $this->admin_model->get_company_list(),
+            'company_list' => $this->admin_model->get_company_list_emp(),
         );
 
         $this->load->view('frame/header_view');
