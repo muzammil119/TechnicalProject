@@ -1,11 +1,5 @@
 <?php
 
-    /******************************************
-    *      Codeigniter 3 Simple Login         *
-    *   Developer  :  rudiliucs1@gmail.com    *
-    *        Copyright © 2017 Rudi Liu        *
-    *******************************************/
-
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
@@ -32,93 +26,46 @@ class Admin extends CI_Controller {
         }
     }
 
-    public function user_list(){
+    public function company_list(){
+        $sess_data = $this->session->userdata('logged_in');
 
         $data = array(
-            'formTitle' => 'User Management',
-            'title' => 'User Management',
-            'users' => $this->admin_model->get_user_list(),
-            'roles' => $this->admin_model->get_role_list(),
+            'formTitle' => 'Company Management',
+            'title' => 'Company Management',
+            'company_list' => $this->admin_model->get_company_list(),
+            
         );
 
         $this->load->view('frame/header_view');
         $this->load->view('frame/sidebar_nav_view');
-        $this->load->view('admin/user_list', $data);
+        $this->load->view('admin/company_list_view', $data);
 
     }
 
-    function add_user(){
+    function add_company(){
         $this->ajax_checking();
-
+        $sess_id = $this->session->userdata('logged_in');
         $postData = $this->input->post();
-        $insert = $this->admin_model->insert_user($postData);
+        $insert = $this->admin_model->insert_company($postData, $sess_id);
         if($insert['status'] == 'success')
-            $this->session->set_flashdata('success', 'User '.$postData['email'].' has been successfully created!');
+            $this->session->set_flashdata('success', 'User '.$postData['name'].' has been successfully added!');
 
         echo json_encode($insert);
     }
 
-    function update_user_details(){
+    function update_company_details(){
         $this->ajax_checking();
 
-        $postData = $this->input->post();
-       
-        $update = $this->admin_model->update_user_details($postData);
+        $sess_id = $this->session->userdata('logged_in');
+        $postData = $this->input->post();   
+
+        $update = $this->admin_model->update_company_details($postData, $sess_id);
         if($update['status'] == 'success')
-            $this->session->set_flashdata('success', 'User '.$postData['email'].'`s details have been successfully updated!');
+            $this->session->set_flashdata('success', 'Company '.$postData['name'].'`s details have been successfully updated!');
 
         echo json_encode($update);
     }
 
-    function deactivate_user($email,$id){
-        $this->ajax_checking();
-
-
-        // $url    =  'https://ant.aliceblueonline.com/oauth2/token?client_id=DEMOHY1&client_secret=qhfi6c2AzkM3M6RHjIPmQTo4pCxNWsshxStWRXL74YKA24rsB39Hk3jnibnQ2qIF';
-        
-        // $api = "KEY GOES HERE";
-        // $authurl = "https://ant.aliceblueonline.com/oauth2/token";
-
-        $client_id = "DEMOHY1";
-        $client_secret = "qhfi6c2AzkM3M6RHjIPmQTo4pCxNWsshxStWRXL74YKA24rsB39Hk3jnibnQ2qIF";
-
-        // $client_id = '';
-        // $client_secret = '';
-        $redirect_uri= "http://127.0.0.1/api/oauthapp";
-        $authorization_code = 'fuDPe060Br8AS8Ma5_HVR6hnUsUStiPH42YjLogh1DY.hqKEgkA_HDJYNX1nzjl9qRp0rq9x6AAtgIfuP_6E8gY';
-        //$url = 'https://ant.aliceblueonline.com/hydrasocket/v2/websocket';
-
-        // $data = array(
-        //     'client_id' => $client_id,
-        //     'client_secret' => $client_secret,
-        //     'redirect_uri' => $redirect_uri,
-        //      'code' => $authorization_code
-        //  );
-
-        // https://ant.aliceblueonline.com/hydrasocket/v2/websocket?access_token=boAhiWZ16wQu52AST0ggffjBy1taX62knbX4J7BVujM.3XG6rq1_PsCmey6sRVMce6LxWV_upzn5Onnek21JaAs&m="NSE"
-
-        // $options = array(
-        //     'http' => array(
-        //         'header'  => "Content-type: application/json\r\n",
-        //         'method'  => 'POST',
-        //         'content' => json_encode($data)
-        //     )
-        // );
-        // // $context  = stream_context_create($options);
-        // //$result = file_get_contents($url, false, $context);
-
-        // var_dump($result);
-        //$data['access_token'] = $page_access_token;
-
-        
-
-        $url = 'https://ant.aliceblueonline.com/hydrasocket/v2/websocket?access_token=boAhiWZ16wQu52AST0ggffjBy1taX62knbX4J7BVujM.3XG6rq1_PsCmey6sRVMce6LxWV_upzn5Onnek21JaAs&[NSE]';
-
-        if($result)
-            $this->session->set_flashdata('success', 'User '.$email.' has been successfully deleted!');
-
-        echo json_encode($update);
-    }
 
     function reset_user_password($email,$id){
         $this->ajax_checking();
@@ -130,56 +77,77 @@ class Admin extends CI_Controller {
         echo json_encode($update);
     }
 
-    function activity_log(){
-        $data = array(
-            'formTitle' => 'Activity Log',
-            'title' => 'Activity Log',
-        );
-        $this->load->view('frame/header_view');
-        $this->load->view('frame/sidebar_nav_view');
-        $this->load->view('admin/activity_log', $data);
-
-    }
 
     function get_activity_log(){
         $this->ajax_checking();
         echo  json_encode( $this->admin_model->get_activity_log() );
     }
-    public function role_list(){
+    public function employee_list(){
 
         $data = array(
-            'formTitle' => 'Role Management',
-            'title' => 'Role Management',
-            'users' => $this->admin_model->get_role_datatable(),
+            'formTitle' => 'Employee Management',
+            'title' => 'Employee Management',
+            'employee_list' => $this->admin_model->get_employee_datatable(),
+            'company_list' => $this->admin_model->get_company_list(),
         );
 
         $this->load->view('frame/header_view');
         $this->load->view('frame/sidebar_nav_view');
-        $this->load->view('admin/role_list', $data);
+        $this->load->view('admin/employee_list_view', $data);
 
     }
-    function add_role(){
+    function add_employee(){
         $this->ajax_checking();
-
+        $sess_id = $this->session->userdata('logged_in');
         $postData = $this->input->post();
-        $insert = $this->admin_model->insert_role($postData);
+        $insert = $this->admin_model->insert_employee($postData, $sess_id);
         if($insert['status'] == 'success')
-            $this->session->set_flashdata('success', 'User '.$postData['role_name'].' has been successfully created!');
+            $this->session->set_flashdata('success', 'Employee '.$postData['first_name'].' has been successfully created!');
 
         echo json_encode($insert);
     }
-    function update_role_details(){
+    function update_employee_details(){
         $this->ajax_checking();
-
+        $sess_id = $this->session->userdata('logged_in');
         $postData = $this->input->post();
 
-        $update = $this->admin_model->update_role_details($postData);
+        $update = $this->admin_model->update_employee_details($postData, $sess_id);
         if($update['status'] == 'success')
-            $this->session->set_flashdata('success', 'User '.$postData['role_name'].'`s details have been successfully updated!');
+            $this->session->set_flashdata('success', 'Employee '.$postData['first_name'].'`s details have been successfully updated!');
 
         echo json_encode($update);
     }
-    
+    function delete_company($email,$id){
+        $this->ajax_checking();
+
+        $update = $this->admin_model->delete_company($email,$id);
+        if($update['status'] == 'success')
+            $this->session->set_flashdata('success', 'Company '.$email.' has been successfully deleted!');
+
+        echo json_encode($update);
+    }
+    function deactivate_employee($email,$id){
+        $this->ajax_checking();
+
+        $update = $this->admin_model->delete_employee($email,$id);
+        if($update['status'] == 'success')
+            $this->session->set_flashdata('success', 'Employee '.$email.' has been successfully deleted!');
+
+        echo json_encode($update);
+    }
+    function upload_logo(){
+        
+        if($_FILES["company_logo"]["name"] != '')
+        {
+             $test = explode('.', $_FILES["company_logo"]["name"]);
+             $ext = end($test);
+             $name = rand(100, 999) . '.' . $ext;
+             $location = './uploads/' . $name;  
+             move_uploaded_file($_FILES["company_logo"]["tmp_name"], $location);
+             echo json_encode(base_url().'/uploads/'.$name);
+             
+        }
+    }
 
 }
 

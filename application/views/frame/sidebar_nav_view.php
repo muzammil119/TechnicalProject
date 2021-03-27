@@ -9,10 +9,10 @@
                         </li>
                         <?php if($this->session->userdata('role') == 'Admin'): ?>
                            <li>
-                            <a href="#"><i class="fa fa-user fa-fw"></i> Admin<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-user fa-fw"></i> Menu<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li> <a href="<?=base_url('admin/user_list')?>">&raquo; User's</a> </li>
-                                <li> <a href="<?=base_url('admin/role_list')?>">&raquo; Roles</a> </li>
+                                <li> <a href="<?=base_url('admin/company_list')?>">&raquo; Company List</a> </li>
+                                <li> <a href="<?=base_url('admin/employee_list')?>">&raquo; Employee List</a> </li>
                                 
                             </ul>
                             
